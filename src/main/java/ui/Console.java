@@ -11,6 +11,8 @@ import java.util.Scanner;
 
 public class Console {
 
+    private static final String OS = System.getProperty("os.name").toLowerCase();
+
     private record Range(int low, int high) {
 
         public boolean contains(int number) {
@@ -25,7 +27,31 @@ public class Console {
         return scanner.nextLine();
     }
 
+    private static void pause() {
+        System.out.println("WOOPS! Something went wrong. Contact Developer, press enter key to exit.");
+        try {
+            System.in.read();
+        } catch (Exception ignored) {
+
+        }
+    }
+
+    private static void clear() {
+        try {
+            if (OS.contains("windows")) {
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            } else {
+                Runtime.getRuntime().exec("clear");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            pause();
+        }
+    }
+
+
     public static void showOptions() {
+        clear();
         System.out.println("Diablo II Remastered Backup Utility\n");
         System.out.println("[1] Backup");
         System.out.println("[2] Restore");
@@ -82,16 +108,8 @@ public class Console {
         return profileNumber;
     }
 
-    private static void pause() {
-        System.out.println("WOOPS! Something went wrong. Contact Developer, press enter key to exit.");
-        try {
-            System.in.read();
-        } catch (Exception ignored) {
-
-        }
-    }
-
     private static void backup() {
+        clear();
         if (!ProfileFetcher.folderExists()) {
             askOptions("Saved Files folder does not exist! ");
             return;
@@ -181,9 +199,9 @@ public class Console {
     }
 
     private static void restore() {
+        clear();
         if (!Persistence.backupDirExists()) {
             Persistence.createBackupDir();
-//            askOptions("Backup folder does not exist! ");
         }
         String[] restorePoints = Persistence.getBackupData();
         if (restorePoints == null) {

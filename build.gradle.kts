@@ -2,6 +2,12 @@ plugins {
     id("java")
 }
 
+tasks.jar {
+    manifest {
+        attributes("Main-Class" to "Main")
+    }
+}
+
 group = "zjaun.utilities"
 version = "1.0"
 
